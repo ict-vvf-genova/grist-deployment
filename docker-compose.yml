@@ -8,7 +8,8 @@ x-proxy-image: &proxy-image "docker.io/hectorm/proxy:v1"
 # https://hub.docker.com/r/gristlabs/grist
 x-grist-image: &grist-image "docker.io/gristlabs/grist:1.1.10"
 # https://hub.docker.com/r/dexidp/dex
-x-dex-image: &dex-image "docker.io/dexidp/dex:v2.37.0"
+# was: x-dex-image: &dex-image "docker.io/dexidp/dex:v2.37.0"
+x-dex-image: &dex-image "ghcr.io/ict-vvf-genova/dex-smtp:master"
 # https://hub.docker.com/r/minio/minio
 x-minio-image: &minio-image "docker.io/minio/minio:RELEASE.2024-01-18T22-51-28Z"
 # https://hub.docker.com/r/minio/mc
@@ -71,11 +72,14 @@ services:
           - "github.com"
           - "raw.githubusercontent.com"
           - "objects.githubusercontent.com"
+#          - "smtp-s.vigilfuoco.it"
     environment:
       PROXY_UPSTREAMS_HTTPS: |
         github.com
         raw.githubusercontent.com
         objects.githubusercontent.com
+#      PROXY_UPSTREAMS_SMTPS: |
+#        smtp-s.vigilfuoco.it
 
   grist:
     image: *grist-image
@@ -166,11 +170,18 @@ services:
     container_name: "docs-dex"
     hostname: "dex"
     networks:
+      - "public"
       - "private"
     volumes:
       - "./config/dex/config.yaml:/etc/dex/config.yaml:ro"
     environment:
       DEX_DOMAIN: "${DEX_DOMAIN:?}"
+      DEX_SMTP_NAME: "${DEX_SMTP_NAME:?}"
+      DEX_SMTP_ID: "${DEX_SMTP_ID:?}"
+      DEX_SMTP_HOST: "${DEX_SMTP_HOST:?}"
+      DEX_SMTP_DOMAIN: "${DEX_SMTP_DOMAIN:?}"
+      DEX_SMTP_LABEL: "${DEX_SMTP_LABEL:?}"
+      DEX_ADMIN: "${DEX_ADMIN:?}"
       DEX_ADMIN_USER_EMAIL: "${DEX_ADMIN_USER_EMAIL:?}"
       DEX_ADMIN_USER_PASSWORD_HASH: "${DEX_ADMIN_USER_PASSWORD_HASH:?}"
       GRIST_DOMAIN: "${GRIST_DOMAIN:?}"

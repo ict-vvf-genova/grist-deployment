@@ -18,8 +18,22 @@ staticClients:
     id: "grist"
     secret: "{{ .Env.GRIST_OAUTH_CLIENT_SECRET }}"
     redirectURIs: ["https://{{ .Env.GRIST_DOMAIN }}/oauth2/callback"]
+
+{{ $test := .Env.DEX_ADMIN }}
+{{ if eq $test "true" }}
 enablePasswordDB: true
 staticPasswords:
   - username: "admin"
-    email: {{ .Env.DEX_ADMIN_USER_EMAIL }}
+    email: "{{ .Env.DEX_ADMIN_USER_EMAIL }}"
     hash: "{{ .Env.DEX_ADMIN_USER_PASSWORD_HASH }}"
+{{ else }}
+connectors:
+- type: smtp
+  name: "{{ .Env.DEX_SMTP_NAME }}"
+  id: "{{ .Env.DEX_SMTP_ID }}"
+  config:
+    host: "{{ .Env.DEX_SMTP_HOST }}"
+    domain: "{{ .Env.DEX_SMTP_DOMAIN }}"
+    label: "{{ .Env.DEX_SMTP_LABEL }}"
+{{ end }}
+
