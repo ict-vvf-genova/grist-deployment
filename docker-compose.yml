@@ -171,7 +171,8 @@ services:
       - "./config/dex/config.yaml:/etc/dex/config.yaml:ro"
     environment:
       DEX_DOMAIN: "${DEX_DOMAIN:?}"
-      DEX_DEMO_USERS_PASSWORD_HASH: "${DEX_DEMO_USERS_PASSWORD_HASH:?}"
+      DEX_ADMIN_USER_EMAIL: "${DEX_ADMIN_USER_EMAIL:?}"
+      DEX_ADMIN_USER_PASSWORD_HASH: "${DEX_ADMIN_USER_PASSWORD_HASH:?}"
       GRIST_DOMAIN: "${GRIST_DOMAIN:?}"
       GRIST_OAUTH_CLIENT_SECRET: "${GRIST_OAUTH_CLIENT_SECRET:?}"
       MINIO_DOMAIN: "${MINIO_DOMAIN:?}"

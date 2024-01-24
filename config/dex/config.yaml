@@ -21,11 +21,5 @@ staticClients:
 enablePasswordDB: true
 staticPasswords:
   - username: "admin"
-    email: "admin@example.localhost"
-    hash: "{{ .Env.DEX_DEMO_USERS_PASSWORD_HASH }}"
-  - username: "alice"
-    email: "alice@example.localhost"
-    hash: "{{ .Env.DEX_DEMO_USERS_PASSWORD_HASH }}"
-  - username: "bob"
-    email: "bob@example.localhost"
-    hash: "{{ .Env.DEX_DEMO_USERS_PASSWORD_HASH }}"
+    email: {{ .Env.DEX_ADMIN_USER_EMAIL }}
+    hash: "{{ .Env.DEX_ADMIN_USER_PASSWORD_HASH }}"
