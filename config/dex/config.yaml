@@ -1,14 +1,8 @@
 issuer: "https://{{ .Env.DEX_DOMAIN }}/dex"
 storage:
-  type: "postgres"
+  type: sqlite3
   config:
-    host: "postgres"
-    port: 5432
-    database: "dex"
-    user: "dex"
-    password: "{{ .Env.DEX_POSTGRES_PASSWORD }}"
-    ssl:
-      mode: "disable"
+    file: /var/dex/dex.db
 web:
   http: "0.0.0.0:5556"
 frontend:

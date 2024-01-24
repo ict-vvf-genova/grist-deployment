@@ -10,8 +10,6 @@ entryPoints:
   https:
     address: ":443/tcp"
     http3: { }
-  postgres:
-    address: ":5432/tcp"
 providers:
   file:
     directory: "/etc/traefik/dynamic/"

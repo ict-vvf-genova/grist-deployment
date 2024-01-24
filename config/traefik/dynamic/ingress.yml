@@ -176,14 +176,3 @@ http:
       loadBalancer:
         servers:
           - url: "http://minio:9001"
-tcp:
-  routers:
-    postgres:
-      rule: 'HostSNI(`*`)'
-      entryPoints: ["postgres"]
-      service: "postgres"
-  services:
-    postgres:
-      loadBalancer:
-        servers:
-          - address: "postgres:5432"

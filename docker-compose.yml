@@ -13,8 +13,6 @@ x-dex-image: &dex-image "docker.io/dexidp/dex:v2.37.0"
 x-minio-image: &minio-image "docker.io/minio/minio:RELEASE.2024-01-18T22-51-28Z"
 # https://hub.docker.com/r/minio/mc
 x-minio-mc-image: &minio-mc-image "docker.io/minio/mc:RELEASE.2024-01-18T07-03-39Z"
-# https://hub.docker.com/_/postgres
-x-postgres-image: &postgres-image "docker.io/postgres:16-bookworm"
 # https://hub.docker.com/_/redis
 x-redis-image: &redis-image "docker.io/redis:7-bookworm"
 
@@ -37,7 +35,6 @@ services:
       - "80:80/tcp" # HTTP.
       - "443:443/tcp" # HTTPS.
       - "443:443/udp" # HTTPS (QUIC).
-      - "127.0.0.1:5432:5432/tcp" # PostgreSQL.
     volumes:
       - "./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
       - "./config/traefik/dynamic/:/etc/traefik/dynamic/:ro"
@@ -174,7 +171,6 @@ services:
       - "./config/dex/config.yaml:/etc/dex/config.yaml:ro"
     environment:
       DEX_DOMAIN: "${DEX_DOMAIN:?}"
-      DEX_POSTGRES_PASSWORD: "${POSTGRES_DEX_PASSWORD:?}"
       DEX_DEMO_USERS_PASSWORD_HASH: "${DEX_DEMO_USERS_PASSWORD_HASH:?}"
       GRIST_DOMAIN: "${GRIST_DOMAIN:?}"
       GRIST_OAUTH_CLIENT_SECRET: "${GRIST_OAUTH_CLIENT_SECRET:?}"
@@ -186,9 +182,6 @@ services:
       interval: "10s"
       timeout: "5s"
       retries: 2
-    depends_on:
-      postgres:
-        condition: "service_healthy"
 
   minio:
     image: *minio-image
@@ -231,27 +224,6 @@ services:
       minio:
         condition: "service_healthy"
 
-  postgres:
-    image: *postgres-image
-    restart: "always"
-    container_name: "docs-postgres"
-    hostname: "postgres"
-    networks:
-      - "private"
-    volumes:
-      - "./config/postgres/initdb.d/:/docker-entrypoint-initdb.d/:ro"
-      - "./data/postgres/:/var/lib/postgresql/data/:Z"
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "${POSTGRES_SUPERUSER_PASSWORD:?}"
-      POSTGRES_DEX_PASSWORD: "${POSTGRES_DEX_PASSWORD:?}"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-qU", "postgres"]
-      start_period: "5m"
-      interval: "10s"
-      timeout: "5s"
-      retries: 2
-
   redis-grist:
     image: *redis-image
     restart: "always"
@@ -281,3 +253,4 @@ networks:
   private:
     name: "docs-private"
     internal: true
+
