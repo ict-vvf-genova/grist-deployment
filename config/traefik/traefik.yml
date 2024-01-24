@@ -50,7 +50,5 @@ certificatesResolvers:
 api:
   dashboard: true
   disableDashboardAd: true
-metrics:
-  prometheus: { }
 ping: { }
 accessLog: { }

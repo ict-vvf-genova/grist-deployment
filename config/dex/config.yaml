@@ -24,10 +24,6 @@ staticClients:
     id: "grist"
     secret: "{{ .Env.GRIST_OAUTH_CLIENT_SECRET }}"
     redirectURIs: ["https://{{ .Env.GRIST_DOMAIN }}/oauth2/callback"]
-  - name: "Grafana"
-    id: "grafana"
-    secret: "{{ .Env.GRAFANA_OAUTH_CLIENT_SECRET }}"
-    redirectURIs: ["https://{{ .Env.GRAFANA_DOMAIN }}/login/generic_oauth"]
 enablePasswordDB: true
 staticPasswords:
   - username: "admin"

@@ -34,8 +34,6 @@ export LC_ALL='C'
 		'DNS:grist.example.localhost' \
 		'DNS:idp.example.localhost' \
 		'DNS:minio.example.localhost' \
-		'DNS:grafana.example.localhost' \
-		'DNS:prometheus.example.localhost' \
 	| paste -sd, -)
 	SERVER_CRT_VALIDITY_DAYS='7300'
 	SERVER_CRT_RENOVATION_DAYS='30'
