@@ -3,8 +3,6 @@ name: "docs"
 
 # https://hub.docker.com/_/traefik
 x-traefik-image: &traefik-image "docker.io/traefik:2.10"
-# https://hub.docker.com/r/hectorm/proxy
-x-proxy-image: &proxy-image "docker.io/hectorm/proxy:v1"
 # https://hub.docker.com/r/gristlabs/grist
 x-grist-image: &grist-image "docker.io/gristlabs/grist:1.1.10"
 # https://hub.docker.com/r/dexidp/dex
@@ -59,27 +57,6 @@ services:
       interval: "10s"
       timeout: "5s"
       retries: 2
-
-  proxy:
-    image: *proxy-image
-    restart: "always"
-    container_name: "docs-proxy"
-    hostname: "proxy"
-    networks:
-      public:
-      private:
-        aliases:
-          - "github.com"
-          - "raw.githubusercontent.com"
-          - "objects.githubusercontent.com"
-#          - "smtp-s.vigilfuoco.it"
-    environment:
-      PROXY_UPSTREAMS_HTTPS: |
-        github.com
-        raw.githubusercontent.com
-        objects.githubusercontent.com
-#      PROXY_UPSTREAMS_SMTPS: |
-#        smtp-s.vigilfuoco.it
 
   grist:
     image: *grist-image
@@ -142,7 +119,6 @@ services:
       HUGGINGFACE_API_KEY: "${HUGGINGFACE_API_KEY:-}"
       COMPLETION_MODEL: "${COMPLETION_MODEL:-}"
       COMPLETION_URL: "${COMPLETION_URL:-}"
-      GRIST_PROMCLIENT_PORT: "9090"
       # Set to "0" to disable certificate validation.
       # WARNING, changing this value is unsafe and should only be used for testing purposes.
       NODE_TLS_REJECT_UNAUTHORIZED: "${GRIST_NODE_TLS_REJECT_UNAUTHORIZED:-0}"
@@ -160,8 +136,6 @@ services:
       minio-init:
         condition: "service_completed_successfully"
       redis-grist:
-        condition: "service_healthy"
-      proxy:
         condition: "service_healthy"
 
   dex:
